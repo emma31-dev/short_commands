@@ -2,7 +2,7 @@ use std::process::{Command};
 
 mod structures;
 
-pub fn if_exists(arg: Vec<String>) -> (Option<String>, Option<String>, Option<String>) {
+pub fn if_exists(arg: &Vec<String>) -> (Option<String>, Option<String>, Option<String>) {
     if arg[1].is_empty() {
         (None, None, None)
     } else if !arg[1].is_empty() {
