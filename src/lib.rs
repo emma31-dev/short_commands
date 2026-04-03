@@ -2,16 +2,16 @@ use std::process::{Command};
 
 mod structures;
 
-pub fn if_exists(arg: &Vec<String>) -> (Option<String>, Option<String>, Option<String>) {
-    if arg[1].is_empty() {
-        (None, None, None)
-    } else if !arg[1].is_empty() {
-        (Some(arg[1].clone()), None, None)
+pub fn if_exists(mut arg: Vec<String>) -> (Option<String>, Option<String>, Option<String>) {
+    if !arg[3].is_empty() {
+        (Some(arg.swap_remove(3)), Some(arg[2].clone()), Some(arg[3].clone()))
     } else if !arg[2].is_empty() {
-        (Some(arg[1].clone()), Some(arg[2].clone()), None)
+        (Some(arg.swap_remove(2)), Some(arg[2].clone()), None)
+    } else if !arg[1].is_empty() {
+        (Some(arg.swap_remove(1)), None, None)
     } else {
-        (Some(arg[1].clone()), Some(arg[2].clone()), Some(arg[3].clone()))
-    }
+        (None, None, None)
+    } 
 }
 
 pub fn run_command(command: Option<String>, command_arg1: Option<String>, command_arg2: Option<String>) { 
