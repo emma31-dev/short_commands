@@ -1,7 +1,7 @@
 #[allow(unused)]
 pub struct Command {
     short: String,
-    long: String
+    long: String,
 }
 
 #[allow(unused)]
