@@ -1,12 +1,16 @@
 extern crate short_commands;
 
+use short_commands::{if_exists, run_command, structures::Command};
 use std::env::args;
-
-use short_commands::{if_exists, run_command};
 
 fn main() {
     let arg: Vec<String> = args().collect();
-    let (command_arg2, command_arg1, command) = if_exists(arg);
+    let (argument, command) = if_exists(arg);
 
-    run_command(command_arg2, command_arg1, command);
+    if command == Some("new".to_string()) {
+        let new_command = (command, argument);
+        new_command.add()
+    } else {
+        run_command();
+    }
 }

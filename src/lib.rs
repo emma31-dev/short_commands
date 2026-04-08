@@ -1,39 +1,49 @@
+use std::env::current_dir;
 use std::process::Command;
 
 mod structures;
 
-pub fn if_exists(mut arg: Vec<String>) -> (Option<String>, Option<String>, Option<String>) {
-    if !arg[3].is_empty() {
-        (
-            Some(arg.swap_remove(3)),
-            Some(arg[2].clone()),
-            Some(arg[1].clone()),
-        )
-    } else if !arg[2].is_empty() {
-        (Some(arg.swap_remove(2)), Some(arg[2].clone()), None)
+pub fn if_exists(mut arg: Vec<String>) -> (Option<String>, Option<String>) {
+    if !arg[2].is_empty() {
+        (Some(arg.swap_remove(2)), Some(arg.swap_remove(1)))
     } else if !arg[1].is_empty() {
-        (Some(arg.swap_remove(1)), None, None)
+        (None, Some(arg.swap_remove(1)))
     } else {
-        (None, None, None)
+        (None, None)
     }
 }
 
-pub fn run_command(
-    command_arg2: Option<String>,
-    command_arg1: Option<String>,
-    command: Option<String>,
-) {
-    if command == Some("cc".to_string()) {
+#[allow(dead_code)]
+pub fn get_commands(shortcommand: String) -> (Option<String>, Option<String>) {
+    (None, None)
+}
+
+pub fn run_command(argument: Option<String>, command: Option<String>) {
+    if command != None {
+        let path = current_dir().unwrap_or_default();
         Command::new("cargo")
             .arg("check")
-            .current_dir("/Users/olaocha/Projects/short_commands")
+            .current_dir(path)
             .status()
             .expect("unexpected error");
     } else {
-        println!(
+        panic!(
             "command not available for {} and {}",
-            command_arg1.unwrap_or_default(),
-            command_arg2.unwrap_or_default()
+            command.unwrap_or_default(),
+            argument.unwrap_or_default()
         );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_run_command() -> Result<(), ()> {
+        let argument = Some("check".to_string());
+        let command = Some("cargo".to_string());
+        run_command(argument, command);
+
+        Ok(())
     }
 }

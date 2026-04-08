@@ -1,0 +1,6 @@
+{
+    "cc": {
+      "command": "cargo",
+      "argument": "check"
+    }
+}
