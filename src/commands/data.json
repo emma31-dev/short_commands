@@ -1,6 +1,9 @@
 {
-    "cc": {
+  "commands": [
+    {
+      "short_com": "cc",
       "command": "cargo",
       "argument": "check"
     }
+  ]
 }
