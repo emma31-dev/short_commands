@@ -3,10 +3,15 @@ use serde_json;
 use std::{error::Error, fs::OpenOptions, io::BufReader};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct Command {
+pub struct Command {
     short_com: String,
     command: String,
     argument: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Commands {
+    pub commands: Vec<Command>
 }
 
 pub fn new_command(short: String, command: String, argument: String) -> Result<(), Box<dyn Error>> {
@@ -22,8 +27,8 @@ pub fn new_command(short: String, command: String, argument: String) -> Result<(
         .open("commands/data.json")?;
     let reader = BufReader::new(&file);
 
-    let mut commands: Vec<Command> = serde_json::from_reader(reader)?;
-    commands.push(com);
+    let mut commands: Commands = serde_json::from_reader(reader)?;
+    commands.commands.push(com);
 
     Ok(())
 }
@@ -33,7 +38,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn creating_new_command() -> Result<(), Box<dyn Error>> {
+    fn test_creating_new_command() -> Result<(), Box<dyn Error>> {
         let result = new_command(
             "short".to_string(),
             "command".to_string(),
@@ -41,6 +46,18 @@ mod tests {
         )?;
         assert_eq!(result, ());
 
+        Ok(())
+    }
+    
+    #[test]
+    fn test_adding_new_command() -> Result<(), Box<dyn Error>> {
+        let short = String::from("ts");
+        let command = String::from("test command");
+        let argument = String::from("test_argument");
+        let result = new_command(short, command, argument)?;
+        
+        assert_eq!(result, ());
+        
         Ok(())
     }
 }

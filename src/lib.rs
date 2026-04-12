@@ -1,28 +1,36 @@
 use std::env::current_dir;
-use std::process::Command;
+use std::error::Error;
+use std::fs::{OpenOptions};
+use std::io::BufReader;
+use std::process;
+use structures::{Command, Commands};
 
-mod create;
-mod structures;
+pub mod create;
+pub mod structures;
 
-pub fn if_exists(mut arg: Vec<String>) -> (Option<String>, Option<String>) {
-    if !arg[2].is_empty() {
-        (Some(arg.swap_remove(2)), Some(arg.swap_remove(1)))
-    } else if !arg[1].is_empty() {
-        (None, Some(arg.swap_remove(1)))
-    } else {
-        (None, None)
-    }
+pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
+    Some(arg.swap_remove(1))
 }
 
 #[allow(dead_code)]
-pub fn get_commands(shortcommand: String) -> (Option<String>, Option<String>) {
-    (None, None)
+pub fn get_commands(shortcommand: Option<String>) -> Result<(Option<String>, Option<Vec<String>>), Box<dyn Error>> {
+    let sc = shortcommand.unwrap_or_default();
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open("commands/data.json")?;
+    let reader = BufReader::new(&file);
+
+    let mut commands: Commands = serde_json::from_reader(reader)?;
+    let fetcthed_command = commands.commands.get(&sc);
+    
+    
 }
 
 pub fn run_command(argument: Option<String>, command: Option<String>) {
     if command != None {
         let path = current_dir().unwrap_or_default();
-        Command::new("cargo")
+        process::Command::new("cargo")
             .arg("check")
             .current_dir(path)
             .status()
