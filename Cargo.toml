@@ -2,6 +2,7 @@
 name = "short_commands"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/emma31-dev/short_commands"
 
 [dependencies]
 serde = {version = "1.0", features = ["derive"]}
@@ -14,3 +15,6 @@ path = "src/bin/main.rs"
 [lib]
 name = "short_commands"
 path = "src/lib.rs"
+
+[dev-dependencies]
+proptest = "1.11.0"
