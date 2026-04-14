@@ -1,6 +1,6 @@
 use super::structures::new_command;
-use std::io::stdin;
 use std::error::Error;
+use std::io::stdin;
 
 pub fn create_new_command() -> Result<(), Box<dyn Error>> {
     println!("Enter command");
@@ -20,8 +20,8 @@ pub fn create_new_command() -> Result<(), Box<dyn Error>> {
     stdin()
         .read_line(&mut short_com)
         .expect("unable to get input");
-    
+
     new_command(short_com, command, argument)?;
-    
+
     Ok(())
 }

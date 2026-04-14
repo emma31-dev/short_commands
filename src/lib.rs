@@ -1,10 +1,9 @@
 use std::env::current_dir;
 use std::error::Error;
-use std::fs::{OpenOptions};
+use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::process;
 use structures::{Command, Commands};
-use std::slice::SliceIndex;
 pub mod create;
 pub mod structures;
 
@@ -12,27 +11,28 @@ pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))
 }
 
-fn query<T>(sc: T) -> Command
-    where 
-        T: SliceIndex<[Command]>
-    {
-        let file = OpenOptions::new()
-            .read(true)
-            .write(true)
-            .open("commands/data.json").expect("Failed");
-        let reader = BufReader::new(&file);
+fn query(sc: String) -> Option<&Command> {
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open("commands/data.json")
+        .expect("Failed");
+    let reader = BufReader::new(&file);
+
+    let got_commands: Commands = serde_json::from_reader(reader).expect("FAILED");
+    let fetcthed_command = got_commands.commands.iter().find(|c| c.short_com == sc.as_str());
     
-        let commands: Commands = serde_json::from_reader(reader).expect("FAILED");
-        let fetcthed_command = commands.commands.get(sc).expect("couldn't be found");
-        
-        fetcthed_command.unwrap_or_default()
+    fetcthed_command
 }
 
 #[allow(dead_code)]
-pub fn get_commands(shortcommand: Option<String>) -> Result<(Option<String>, Option<Vec<String>>), Box<dyn Error>> {
+pub fn get_commands(
+    shortcommand: Option<String>,
+) -> Result<Option<Command>, Box<dyn Error>> {
     let sc: String = shortcommand.unwrap_or_default();
     let command = query(sc);
     
+    Ok(command)
 }
 
 pub fn run_command(argument: Option<String>, command: Option<String>) {

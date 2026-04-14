@@ -4,14 +4,14 @@ use std::{error::Error, fs::OpenOptions, io::BufReader};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Command {
-    short_com: String,
-    command: String,
-    argument: String,
+    pub short_com: String,
+    pub command: String,
+    pub argument: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Commands {
-    pub commands: Vec<Command>
+    pub commands: Vec<Command>,
 }
 
 pub fn new_command(short: String, command: String, argument: String) -> Result<(), Box<dyn Error>> {
@@ -48,16 +48,16 @@ mod tests {
 
         Ok(())
     }
-    
+
     #[test]
     fn test_adding_new_command() -> Result<(), Box<dyn Error>> {
         let short = String::from("ts");
         let command = String::from("test command");
         let argument = String::from("test_argument");
         let result = new_command(short, command, argument)?;
-        
+
         assert_eq!(result, ());
-        
+
         Ok(())
     }
 }
