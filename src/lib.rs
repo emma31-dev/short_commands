@@ -11,20 +11,21 @@ pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))
 }
 
-pub fn get_commands(
-    shortcommand: Result<String, Box<dyn Error>>,
-) -> Option<Command> {
+pub fn get_commands(shortcommand: Result<String, Box<dyn Error>>) -> Option<Command> {
     let file = OpenOptions::new()
         .read(true)
         .write(true)
-        .open("commands/data.json")
+        .open("./commands/data.json")
         .expect("Failed");
     let reader = BufReader::new(&file);
 
     let got_commands: Commands = serde_json::from_reader(reader).expect("FAILED");
     let sc = shortcommand.as_ref().expect("Enter valid string");
-    let fetched_command = got_commands.commands.into_iter().find(|c| c.short_com == sc.as_str());
-    
+    let fetched_command = got_commands
+        .commands
+        .into_iter()
+        .find(|c| c.short_com == sc.as_str());
+
     fetched_command
 }
 
