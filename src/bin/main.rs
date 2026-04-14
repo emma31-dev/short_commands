@@ -10,6 +10,6 @@ fn main() {
     if command == Some("new".to_string()) {
         create_new_command().expect("Failed to create new command");
     } else {
-        get_commands(command);
+        get_commands(Ok(command.unwrap_or_default()));
     }
 }

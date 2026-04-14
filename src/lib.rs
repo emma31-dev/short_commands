@@ -11,7 +11,9 @@ pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))
 }
 
-fn query(sc: String) -> Option<&Command> {
+pub fn get_commands(
+    shortcommand: Result<String, Box<dyn Error>>,
+) -> Option<Command> {
     let file = OpenOptions::new()
         .read(true)
         .write(true)
@@ -20,19 +22,10 @@ fn query(sc: String) -> Option<&Command> {
     let reader = BufReader::new(&file);
 
     let got_commands: Commands = serde_json::from_reader(reader).expect("FAILED");
-    let fetcthed_command = got_commands.commands.iter().find(|c| c.short_com == sc.as_str());
+    let sc = shortcommand.as_ref().expect("Enter valid string");
+    let fetched_command = got_commands.commands.into_iter().find(|c| c.short_com == sc.as_str());
     
-    fetcthed_command
-}
-
-#[allow(dead_code)]
-pub fn get_commands(
-    shortcommand: Option<String>,
-) -> Result<Option<Command>, Box<dyn Error>> {
-    let sc: String = shortcommand.unwrap_or_default();
-    let command = query(sc);
-    
-    Ok(command)
+    fetched_command
 }
 
 pub fn run_command(argument: Option<String>, command: Option<String>) {
@@ -56,6 +49,7 @@ pub fn run_command(argument: Option<String>, command: Option<String>) {
 mod tests {
     use super::*;
 
+    #[test]
     fn test_run_command() -> Result<(), ()> {
         let argument = Some("check".to_string());
         let command = Some("cargo".to_string());
