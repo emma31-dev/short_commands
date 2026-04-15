@@ -1,6 +1,6 @@
 extern crate short_commands;
 
-use short_commands::{create::create_new_command, get_commands, if_exists};
+use short_commands::{create::create_new_command, if_exists, run_command};
 use std::env::args;
 
 fn main() {
@@ -10,6 +10,6 @@ fn main() {
     if command == Some("new".to_string()) {
         create_new_command().expect("Failed to create new command");
     } else {
-        get_commands(Ok(command.unwrap_or_default()));
+        run_command(Some(command.unwrap_or_default()));
     }
 }

@@ -1,5 +1,4 @@
 use std::env::current_dir;
-use std::error::Error;
 use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::process;
@@ -11,7 +10,7 @@ pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))
 }
 
-pub fn get_commands(shortcommand: Result<String, Box<dyn Error>>) -> Option<Command> {
+fn get_commands(shortcommand: Option<String>) -> Option<Command> {
     let file = OpenOptions::new()
         .read(true)
         .write(true)
@@ -29,20 +28,16 @@ pub fn get_commands(shortcommand: Result<String, Box<dyn Error>>) -> Option<Comm
     fetched_command
 }
 
-pub fn run_command(argument: Option<String>, command: Option<String>) {
-    if command != None {
-        let path = current_dir().unwrap_or_default();
-        process::Command::new("cargo")
-            .arg("check")
+pub fn run_command(shortcommand: Option<String>) {
+    if let Some(command) = get_commands(shortcommand) {
+        let path = current_dir().expect("couldn't get file path");
+        process::Command::new(command.command)
+            .arg(command.argument)
             .current_dir(path)
             .status()
-            .expect("unexpected error");
+            .expect("couldn't run command");
     } else {
-        panic!(
-            "command not available for {} and {}",
-            command.unwrap_or_default(),
-            argument.unwrap_or_default()
-        );
+        panic!("Could not run command")
     }
 }
 
@@ -52,9 +47,9 @@ mod tests {
 
     #[test]
     fn test_run_command() -> Result<(), ()> {
-        let argument = Some("check".to_string());
-        let command = Some("cargo".to_string());
-        run_command(argument, command);
+        let short_com = Some("cc".to_string());
+
+        run_command(short_com);
 
         Ok(())
     }
