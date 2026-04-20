@@ -36,7 +36,7 @@ pub fn run_command(shortcommand: Option<String>) {
             .arg(command.argument)
             .current_dir(path)
             .status()
-            .expect("couldn't run command");
+            .expect("Failed to run command");
     } else {
         panic!("Could not run command")
     }

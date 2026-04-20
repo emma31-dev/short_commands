@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::error::Error;
 use std::fs::{OpenOptions, Permissions, set_permissions};
-use std::io::BufReader;
+use std::io::{BufReader, Seek, SeekFrom, Write};
 use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -27,17 +27,21 @@ pub fn new_command(short: String, command: String, argument: String) -> Result<(
     let permissions = Permissions::from_mode(0o755);
     set_permissions("./commands/data.json", permissions)?;
 
-    let file = OpenOptions::new()
+    let mut file = OpenOptions::new()
         .read(true)
         .write(true)
         .create(true)
-        .append(true)
         .mode(0o755)
         .open("./commands/data.json")?;
     let reader = BufReader::new(&file);
 
     let mut commands: Commands = serde_json::from_reader(reader)?;
     commands.commands.push(com);
+
+    let serialized = serde_json::to_string_pretty(&commands)?;
+    file.set_len(0)?;
+    file.seek(SeekFrom::Start(0))?;
+    file.write_all(serialized.as_bytes())?;
 
     Ok(())
 }

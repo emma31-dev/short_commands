@@ -4,6 +4,11 @@
       "short_com": "cc",
       "command": "cargo",
       "argument": "check"
+    },
+    {
+      "short_com": "ts",
+      "command": "test command",
+      "argument": "test_argument"
     }
   ]
 }
