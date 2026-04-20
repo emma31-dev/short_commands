@@ -1,10 +1,11 @@
+pub mod create;
+pub mod structures;
+
 use std::env::current_dir;
 use std::fs::OpenOptions;
 use std::io::BufReader;
 use std::process;
 use structures::{Command, Commands};
-pub mod create;
-pub mod structures;
 
 pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))

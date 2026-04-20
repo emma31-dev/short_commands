@@ -3,7 +3,7 @@ use serde_json;
 use std::error::Error;
 use std::fs::{OpenOptions, Permissions, set_permissions};
 use std::io::BufReader;
-use std::os::unix::fs::PermissionsExt;
+use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Command {
@@ -30,6 +30,9 @@ pub fn new_command(short: String, command: String, argument: String) -> Result<(
     let file = OpenOptions::new()
         .read(true)
         .write(true)
+        .create(true)
+        .append(true)
+        .mode(0o755)
         .open("./commands/data.json")?;
     let reader = BufReader::new(&file);
 
