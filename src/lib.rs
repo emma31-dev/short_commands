@@ -7,7 +7,7 @@ use std::io::BufReader;
 use std::process;
 use structures::{Command, Commands};
 
-pub fn if_exists(mut arg: Vec<String>) -> Option<String> {
+pub fn get_from(mut arg: Vec<String>) -> Option<String> {
     Some(arg.swap_remove(1))
 }
 
