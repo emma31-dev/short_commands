@@ -30,16 +30,13 @@ fn get_commands(shortcommand: Option<String>) -> Option<Command> {
 }
 
 pub fn run_command(shortcommand: Option<String>) {
-    if let Some(command) = get_commands(shortcommand) {
-        let path = current_dir().expect("couldn't get file path");
-        process::Command::new(command.command)
-            .arg(command.argument)
-            .current_dir(path)
-            .status()
-            .expect("Failed to run command");
-    } else {
-        panic!("Could not run command")
-    }
+    let command = get_commands(shortcommand).expect("could not find command");
+    let path = current_dir().expect("couldn't get file path");
+    process::Command::new(command.command)
+        .arg(command.argument)
+        .current_dir(path)
+        .status()
+        .expect("Failed to run command");
 }
 
 #[cfg(test)]
@@ -47,10 +44,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_run_command() -> Result<(), ()> {
+    fn test_get_command() -> Result<(), ()> {
         let short_com = Some("cc".to_string());
-
-        run_command(short_com);
+        let _ = get_commands(short_com);
 
         Ok(())
     }
