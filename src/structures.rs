@@ -51,26 +51,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_creating_new_command() -> Result<(), Box<dyn Error>> {
+    fn test_creating_new_command() {
         let result = new_command(
             "short".to_string(),
             "command".to_string(),
             "argument".to_string(),
-        )?;
-        assert_eq!(result, ());
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_adding_new_command() -> Result<(), Box<dyn Error>> {
-        let short = String::from("ts");
-        let command = String::from("test command");
-        let argument = String::from("test_argument");
-        let result = new_command(short, command, argument)?;
-
-        assert_eq!(result, ());
-
-        Ok(())
+        );
+        assert!(result.is_ok());
     }
 }

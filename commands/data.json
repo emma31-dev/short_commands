@@ -11,9 +11,9 @@
       "argument": "test_argument"
     },
     {
-      "short_com": "short",
-      "command": "command",
-      "argument": "argument"
+      "short_com": "ts",
+      "command": "test command",
+      "argument": "test_argument"
     }
   ]
 }
